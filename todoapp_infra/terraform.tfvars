@@ -21,9 +21,9 @@ vnets_subnets = {
       backend-subnet = {
         address_prefix = "10.0.1.0/24"
       }
-      AzureBastionSubnet = {
-        address_prefix = "10.0.2.0/24"
-      }
+      # AzureBastionSubnet = {
+      #   address_prefix = "10.0.2.0/24"
+      # }
     }
   }
 }
@@ -37,6 +37,7 @@ vms = {
     size                = "Standard_DS1_v2"
     admin_username      = "devopsadmin"
     admin_password      = "P@ssw01rd@123"
+    userdata_script     = "install_nginx.sh"
     inbound_open_ports  = [22, 80]
     source_image_reference = {
       publisher = "Canonical"
@@ -44,7 +45,7 @@ vms = {
       sku       = "20_04-lts"
       version   = "latest"
     }
-    enable_public_ip = false
+    enable_public_ip = true
   }
   "backendvm" = {
     resource_group_name = "rg-devopsinsiders"
@@ -54,6 +55,7 @@ vms = {
     size                = "Standard_DS1_v2"
     admin_username      = "devopsadmin"
     admin_password      = "P@ssw01rd@123"
+    userdata_script     = "install_python.sh"
     inbound_open_ports  = [22, 80]
     source_image_reference = {
       publisher = "Canonical"
@@ -61,7 +63,7 @@ vms = {
       sku       = "20_04-lts"
       version   = "latest"
     }
-    enable_public_ip = true
+    enable_public_ip = false
   }
 }
 

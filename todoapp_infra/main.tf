@@ -9,12 +9,12 @@ module "networking" {
   vnets_subnets = var.vnets_subnets
 }
 
-module "vms" {
-  depends_on      = [module.rgs, module.networking]
-  source          = "../modules/LinuxVirtualMachine"
-  vms             = var.vms
-  vnet_subnet_ids = module.networking.vnet_subnet_ids
-}
+# module "vms" {
+#   depends_on      = [module.rgs, module.networking]
+#   source          = "../modules/LinuxVirtualMachine"
+#   vms             = var.vms
+#   vnet_subnet_ids = module.networking.vnet_subnet_ids
+# }
 
 # module "loadbalancers" {
 #   depends_on    = [module.rgs, module.networking, module.vms]
