@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "pips" {
 }
 
 resource "azurerm_network_interface" "nic" {
-  depends_on = [ azurerm_public_ip.pips ]
+  depends_on          = [azurerm_public_ip.pips]
   for_each            = var.vms
   name                = "${each.key}-nic"
   location            = each.value.location
@@ -33,7 +33,7 @@ resource "azurerm_network_security_group" "nsg" {
     for_each = each.value.inbound_open_ports
     content {
       name                       = "OpenPort${security_rule.value}"
-      priority                   = 100+security_rule.value
+      priority                   = ceil((security_rule.value % 9) + 130)
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
@@ -43,7 +43,6 @@ resource "azurerm_network_security_group" "nsg" {
       destination_address_prefix = "*"
     }
   }
-
 }
 
 resource "azurerm_network_interface_security_group_association" "association" {
@@ -61,8 +60,8 @@ resource "azurerm_linux_virtual_machine" "vms" {
   admin_username                  = each.value.admin_username
   admin_password                  = each.value.admin_password
   disable_password_authentication = false
-  custom_data = base64encode(file("${path.module}/../../scripts/${each.value.userdata_script}"))
-  network_interface_ids = [azurerm_network_interface.nic[each.key].id]
+  custom_data                     = lookup(each.value, "userdata_script", null) != null ? base64encode(file("${path.module}/../../scripts/${each.value.userdata_script}")) : null
+  network_interface_ids           = [azurerm_network_interface.nic[each.key].id]
 
   os_disk {
     caching              = "ReadWrite"
@@ -86,4 +85,8 @@ output "vm_public_ips" {
 
 output "vm_nic_ids" {
   value = { for k, v in azurerm_linux_virtual_machine.vms : v.name => v.network_interface_ids[0] }
+}
+
+output "vm_ids" {
+  value = { for k, v in azurerm_linux_virtual_machine.vms : v.name => v.id }
 }

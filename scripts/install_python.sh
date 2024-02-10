@@ -5,7 +5,7 @@ set -euo pipefail
 echo "[INFO] Installing Python"
 
 sudo apt update
-sudo apt install python3 -y
+sudo apt install python3-pip -y
 
 echo "[INFO] Installing UnixODBC"
 
@@ -15,3 +15,19 @@ curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee /etc/a
 sudo apt-get update
 sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
+echo "[INFO] Installing pm2"
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install pm2 -g
+
+echo "[INFO] Setting up Backend Application for First Time"
+
+cd /home/devopsadmin/
+
+git clone https://github.com/devopsinsiders/todoapp-backend-py.git
+
+cd todoapp-backend-py
+
+echo CONNECTION_STRING="Driver={ODBC Driver 17 for SQL Server};Server=tcp:devopsinssrv1.database.windows.net,1433;Database=todoappdb;Uid=devopsadmin;Pwd=P@ssw01rd@123;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;" > .env
+
+pm2 start app.py

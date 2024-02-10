@@ -13,3 +13,7 @@ resource "azurerm_mssql_database" "dbs" {
   name      = each.key
   server_id = azurerm_mssql_server.servers[each.value[0]].id
 }
+
+output "db_connection_strings" {
+  value = transpose({ for k, v in var.servers_dbs : k => v.dbs })
+}
