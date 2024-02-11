@@ -86,11 +86,12 @@ backend_pools = {
 
 servers_dbs = {
   "devopsinssrv1" = {
-    resource_group_name          = "rg-devopsinsiders"
-    location                     = "West Europe"
-    version                      = "12.0"
-    administrator_login          = "devopsadmin"
-    administrator_login_password = "P@ssw01rd@123"
-    dbs                          = ["todoappdb"]
+    resource_group_name            = "rg-devopsinsiders"
+    location                       = "West Europe"
+    version                        = "12.0"
+    administrator_login            = "devopsadmin"
+    administrator_login_password   = "P@ssw01rd@123"
+    allow_access_to_azure_services = true
+    dbs                            = ["todoappdb"]
   }
 }
